@@ -125,7 +125,7 @@ OUTPUT1:
 4)Cheetah watching in cozy spot in Central Park
 Input2: ${prpt}
 Output2
-make sure all the lines are presented in the OUTPUT2 as in the INPUT2.Do not focus on only one character , Rather focus on every character about what they are doing in each line.Always speak about the background and place.I will create text to image from the Ouput2 using each line . You can take help in thinking how the scenes could be from the example i had given you from the previous prompt.Remember while generating each scene from the line the scene represents that exact line not their past nor their future tense. Take a good note that you have given me all the lines in Output2 as Input2`,
+make sure all the lines are presented in the OUTPUT2 as in the INPUT2.Do not focus on only one character , Rather focus on every character about what they are doing in each line.Always speak about the background and place.I will create text to image from the Ouput2 using each line . You can take help in thinking how the scenes could be from the example i had given you from the previous prompt.Remember while generating each scene from the line the scene represents that exact line not their past nor their future tense. Remember not to use any name of character just use the species name .Take a good note that you have given me all the lines in Output2 as Input2`,
 
 
 
