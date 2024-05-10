@@ -43,7 +43,7 @@ Write me a  Aeshop Fables (genre) with many short paragraphs. You are given a pr
       PROMPT: ${prpt}
       STORY:" `
 
-  
+
 
   ];
   let lastResponse = null;
@@ -76,26 +76,91 @@ exports.promptGenerate = catchAsyncError(async (req, res, next) => {
   const data_to_pass_in = prpt;
   console.log('Data sent to python script:', data_to_pass_in);
   const python_process = spawner('python', ['./controller/python.py', data_to_pass_in]);
-  python_process.stdout.on('data', (data)=>{
-  console.log('Data received from python script:', data.toString());
-  res.status(200).json({ success: data.toString() });
+  python_process.stdout.on('data', (data) => {
+    console.log('Data received from python script:', data.toString());
+    res.status(200).json({ success: data.toString() });
   });
-// const lastResponse = await continueConversation(prpt);
-// console.log(lastResponse);
+  // const lastResponse = await continueConversation(prpt);
+  // console.log(lastResponse);
 
-// res.status(200).json({ success: data });
+  // res.status(200).json({ success: data });
 });
 
-exports.diffusionGenerate = catchAsyncError(async (req,res,next)=>{
+async function diffusionGeneration(prpt) {
+
+  const prewrittenPrompts = [
+
+    `Here is an example of what the example scene could be associated with an example story. 
+    story = 1)In the lush greenery of Sundarbans, a playful fox roamed, curious and lively.
+    2)One day, the fox stumbled upon a rumor of hidden treasure buried beneath an ancient banyan tree.
+    3)Excited, the fox embarked on a quest, digging eagerly beneath the sprawling roots.
+    4)Days turned to weeks, but the treasure remained elusive, teasingly hidden from view.
+    5)Undeterred, the fox persevered, fueled by dreams of riches beyond imagination.
+    6)Finally, beneath a pile of moss-covered stones, the fox uncovered a glimmering gem.
+    7)But as it held the treasure aloft, a voice whispered, \"True wealth lies in friendship.\"
+    8)With newfound wisdom, the fox abandoned the gem, cherishing the camaraderie of the forest instead."
+    And here is an example scene for the story. Here one thing to notice that where the character is dreaming, imagining , realizing or doing any other activity that doesn't represent the scene i have focused on making the scenic of what he is dreaming , imagining or realizing about so that the scenes becomes associated with the story.
+    1) A playful fox of reddish fur with a jolly and playful look, pouncing through the lush green of the Sundarbans at sunrise
+    2) A majestic ancient banyan tree in the heart of the Sundarbans forest, in the warm glow of the rising sun
+    3) A fox of reddish fur ,with a aggressive expression digging muds furiously with its claws inside a hole beneath the sprawling roots of a majestic ancient banyan tree in the Sundarbans
+    4) Treasure in a treasure box inside an ancient banyan tree, golden dust of light , Golden radiance glowing from the treasure on the treasure box
+    5) A fox of reddish fur ,dreaming of sitting beside a treasure box , rich fox, gold chains swinging around the fox's neck, golden dust of light , Golden radiance glowing from the treasure on the treasure box
+    6) A glimmering gemstone ,beneath a pile of moss covered stones, crystallized , blue dust of light , bluish radiance glowing from the stone
+    7) A glimmering gemstone , placed inside mouth of a fox with reddish fur and the fox is holding that gemstone with its teeth inside its mouth , blue dust of light , bluish radiance glowing from the fox mouth, beneath an ancient banyan tree
+    8) A glimmering gemstone , crystalized , blue dust of light , bluish radiance glowing from that stone, a fox of reddish standing back , the fox far beneath an ancient banyan tree
+    
+    Here is an example of what the scene could be.In the next prompt i will give you a story for which you will need to create the output scenes. Just keep this example in your knowledge which will help you to go through the process of creating output`,
+
+    `Take the following INPUT and for each item in the list return the structure [CHARACTER ACTION in LOCATION]. If you can't figure out the location, you can make it up.Be a little more productive about the lights on the and scenario of the background of the image. Replace any character name with its species name. Give the result OUTPUT2 below 
+INPUT1:
+
+        "1. A cheetah who lived in the African savanna dreamed of living in the Big Apple. She had seen pictures of the city and it looked like a place where she could really spread her wings and strut her stuff. So, she set off on a journey to find New York City.
+        "2. On the way, she encountered many challenges. She had to cross a vast desert and then a raging river. But she used her speed and agility to run around these obstacles.
+        "3. Finally, she arrived in New York City. But she quickly realized that it wasn't quite what she had dreamed it would be. The concrete jungle was noisy and crowded. There didn't seem to be any room for her to run and play. So the cheetah hid.
+        "4. But the cheetah was not a quitter. She decided to make the best of it and soon found a cozy spot in Central Park where she could watch the hustle and bustle of the city and dream of the day when she could finally run free.
+OUTPUT1:
+1)Cheetah dreaming in New York City
+2)Cheetah running in vast desert and raging river
+3)Cheetah hiding in New York City
+4)Cheetah watching in cozy spot in Central Park
+Input2: ${prpt}
+Output2
+make sure all the lines are presented in the OUTPUT2 as in the INPUT2.Do not focus on only one character , Rather focus on every character about what they are doing in each line.Always speak about the background and place.I will create text to image from the Ouput2 using each line . You can take help in thinking how the scenes could be from the example i had given you from the previous prompt.Remember while generating each scene from the line the scene represents that exact line not their past nor their future tense. Take a good note that you have given me all the lines in Output2 as Input2`,
+
+
+
+
+  ];
+  let lastResponse = null;
+
+  // Use the existing chat history (no need to start a new chat)
+  const chat = await model.startChat({ history: chatHistory });
+
+  for (const prompt of prewrittenPrompts) {
+    console.log(prompt);
+
+    // Send pre-written prompt to the model within the existing chat
+    const result = await chat.sendMessage(prompt);
+    const response = await result.response;
+
+    // Update the chat history within the existing chat
+    chatHistory = chat.history;
+
+    // Store the response
+    lastResponse = response.text();
+    console.log(lastResponse);
+  }
+
+  return lastResponse;
+}
+
+exports.diffusionGenerate = catchAsyncError(async (req, res, next) => {
   const prpt = req.body.story;
-  const data_to_pass_in=prpt;
-  console.log('Data sent to python script:', data_to_pass_in);
-  const python_process = spawner('python', ['./controller/diffusion.py', data_to_pass_in]);
-  python_process.stdout.on('data', (data)=>{
-  console.log('Data received from python script:', data.toString());
-  res.status(200).json({ success: data.toString() });
-  });
-})
+
+  const lastResponse = await diffusionGeneration(prpt);
+  res.status(200).json({ success: lastResponse });
+});
+
 
 async function storyGeneration(prpt) {
 

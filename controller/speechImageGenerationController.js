@@ -135,7 +135,7 @@ exports.imageGenerate = catchAsyncError(async (req, res, next) => {
    
   
 
-    const prompt = `{{${reply}}}, shot 35 mm, realism, octane render, 8k, trending on artstation, 35 mm camera, unreal engine, hyper detailed, photo - realistic maximum detail, volumetric light, realistic matte painting, hyper photorealistic, trending on artstation, ultra - detailed, realistic`
+    const prompt = `${reply}, shot 35 mm, realism, octane render, 8k, trending on artstation, 35 mm camera, unreal engine, hyper detailed, photo - realistic maximum detail, volumetric light, realistic matte painting, hyper photorealistic, trending on artstation, ultra - detailed, realistic`
     
 
 

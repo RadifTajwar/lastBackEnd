@@ -21,7 +21,7 @@ msg = (
     "the physical traits and location of the main character. The story "
     "must be appropriate for children. No sex, death, dying, or anything "
     "scary.Do not use any conversation among the characters as the story should be viewed from a third person angle."
-    "words. Add a twist in the story that the viewer become amoused to see . And make sure the story is written in Aeshops Fable style"
+    "words. And make sure the story is written in Aeshops Fable style"
     "PROMPT: A cat who wants to be a flamingo"
     "STORY:"
     "Title: Flamingo Cat"
