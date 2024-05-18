@@ -31,7 +31,7 @@ exports.voiceGenerate = catchAsyncError(async (req, res, next) => {
 
     // Directory where audio files will be saved
     const directory = `../FrontEnd/public/story/user/${storyTitle}/speeches`;
-    
+
     const filePath = `../FrontEnd/public/story/user/${storyTitle}/lines`;
 
     if (!fs.existsSync(filePath)) {
@@ -40,13 +40,13 @@ exports.voiceGenerate = catchAsyncError(async (req, res, next) => {
     var lineFile = `${filePath}/${voiceId}.txt`;
     fs.writeFile(lineFile, text, (err) => {
         if (err) {
-          console.error('Error writing file:', err);
-          // Handle error
+            console.error('Error writing file:', err);
+            // Handle error
         } else {
-          console.log('Text saved to file:', lineFile);
-          // File saved successfully
+            console.log('Text saved to file:', lineFile);
+            // File saved successfully
         }
-      });
+    });
 
 
     // Ensure the directory exists, create it if it doesn't
@@ -93,7 +93,6 @@ async function imagePromptGeneration(prpt) {
 
     const prewrittenPrompts = [
         ` "${prpt}"
-
          one single string explain what the character doing . If the character is holding or doing something with his arms or legs or tail or head how they are doing it? give the result in a string named "prompt" and give the string in this format "prompt"="prompt_text"`
     ];
     let lastResponse = null;
@@ -123,7 +122,8 @@ exports.imageGenerate = catchAsyncError(async (req, res, next) => {
     const story = req.body.story;
     const text = req.body.text;
     const id = req.body.id;
-    const storyTitle=req.body.title;
+    const style = req.body.style;
+    const storyTitle = req.body.title;
     if (!text) {
         return res.status(400).json({ error: 'Text is required in the request body' });
     }
@@ -131,17 +131,28 @@ exports.imageGenerate = catchAsyncError(async (req, res, next) => {
     // const reply = await imagePromptGeneration(text);
     const reply = text;
     console.log(reply);
-   
-   
-  
 
-    const prompt = `${reply}, shot 35 mm, realism, octane render, 8k, trending on artstation, 35 mm camera, unreal engine, hyper detailed, photo - realistic maximum detail, volumetric light, realistic matte painting, hyper photorealistic, trending on artstation, ultra - detailed, realistic`
-    
+
+
+    const sciFiStyle = " by Andrew McCarthy, Navaneeth Unnikrishnan, Manuel Dietrich, photo realistic, 8k, cinematic lighting, hd, atmospheric, hyperdetailed, trending on artstation, deviantart, photography, glow effect"
+    const classicStyle = " shot 35 mm, realism, octane render, 8k, trending on artstation, 35 mm camera, unreal engine, hyper detailed, photo - realistic maximum detail, volumetric light, realistic matte painting, hyper photorealistic, trending on artstation, ultra - detailed, realistic"
+
+    let stylePrompt;
+    if (style === "classic" || style === "fairyTale") {
+        stylePrompt = classicStyle;
+    } else if (style === "sciFi") {
+        stylePrompt = sciFiStyle;
+    } else {
+        stylePrompt = ""; // handle other cases if necessary
+    }
+    const prompt = `${reply}, ${stylePrompt}`
+
 
 
     const requestBody = {
         prompt: prompt,
-        steps: 50
+        negative_prompt: "sexual, nudity, distorted, bad shape,bad face, bad hand, bad quality",
+        steps: 20
     };
 
     // Make a POST request to localhost:7860
