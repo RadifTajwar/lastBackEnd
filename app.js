@@ -22,7 +22,7 @@ console.log('object')
 const userRoutes = require('./route/userRoutes');
 const promptRoutes =require('./route/promptRoutes');
 const speechImageGenerationRoutes =require('./route/speechImageGenerationRoutes')
-app.use('/api',userRoutes);
+// app.use('/api',userRoutes);
 app.use('/api',promptRoutes);
 app.use('/api',speechImageGenerationRoutes);
 

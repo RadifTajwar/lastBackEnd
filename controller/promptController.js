@@ -23,6 +23,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 
 
+
 async function continueConversation(prpt, style) {
   const prompts = {
     classic: {
